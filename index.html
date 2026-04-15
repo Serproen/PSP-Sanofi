@@ -121,28 +121,43 @@
   }
 
   /* KPI nuevos propuestos */
-  .kpi-table-wrap { background: rgba(255,255,255,0.93); border: 1px solid rgba(255,255,255,0.5);
-    border-radius: var(--radius-lg); padding: 0; overflow: hidden;
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); margin-bottom: 16px; }
-  .kpi-table-header { background: #7B2D8B; color: #fff; text-align: center;
-    font-size: 13px; font-weight: 700; padding: 10px 16px; letter-spacing: 0.05em; }
-  .kpi-new-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-  .kpi-new-table thead tr { background: #e8e0ef; }
-  .kpi-new-table thead th { padding: 8px 10px; font-weight: 700; color: #3a1a50;
-    text-align: left; border-bottom: 1px solid #c9b8d8; font-size: 12px; }
-  .kpi-new-table tbody tr:nth-child(even) { background: rgba(240,234,248,0.7); }
-  .kpi-new-table tbody tr:nth-child(odd) { background: rgba(255,255,255,0.6); }
-  .kpi-new-table tbody tr:hover td { background: rgba(180,150,220,0.15); }
-  .kpi-new-table td { padding: 7px 10px; color: #1a1a18; border-bottom: 1px solid rgba(180,150,220,0.25); vertical-align: middle; }
-  .kpi-new-table td:first-child { font-weight: 500; color: #2a1a3a; }
-  .meta-val { color: #1a6fd4; font-weight: 600; }
-  .estado-ok { color: #0a6640; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
-  .estado-bajo { color: #7a4f00; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
-  .estado-sobre { color: #8b1a1a; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
-  .estado-info { color: #444; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; }
-  .kpi-two-col { display: grid; grid-template-columns: 1fr 1fr; }
-  .kpi-two-col .kpi-new-table td:nth-child(1) { min-width: 180px; }
-  .kpi-divider-col { width: 1px; background: #c9b8d8; }
+  .kpi-table-wrap { background: rgba(255,255,255,0.96); border: 1.5px solid rgba(123,45,139,0.35);
+    border-radius: var(--radius-lg); overflow: hidden;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); margin-bottom: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18); }
+  .kpi-table-header { background: linear-gradient(90deg,#6a1b7a 0%,#9c3bb0 100%); color: #fff;
+    text-align: center; font-size: 14px; font-weight: 800; padding: 12px 20px;
+    letter-spacing: 0.08em; text-transform: uppercase; }
+  .kpi-body-grid { display: grid; grid-template-columns: 1fr 1px 1fr; width: 100%; }
+  .kpi-divider-col { background: rgba(160,100,200,0.3); }
+  .kpi-new-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .kpi-new-table thead tr { background: #ede6f5; }
+  .kpi-new-table thead th { padding: 9px 14px; font-weight: 700; color: #4a1070;
+    text-align: center; border-bottom: 2px solid #c5a8e0; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+  .kpi-new-table thead th:first-child { text-align: left; width: 42%; }
+  .kpi-new-table tbody tr:nth-child(even) { background: #f7f2fc; }
+  .kpi-new-table tbody tr:nth-child(odd)  { background: #ffffff; }
+  .kpi-new-table tbody tr:hover td { background: #ede0f8; transition: background 0.15s; }
+  .kpi-new-table td { padding: 10px 14px; color: #1a1a18;
+    border-bottom: 1px solid rgba(180,140,220,0.2); vertical-align: middle;
+    line-height: 1.3; }
+  .kpi-new-table td:first-child { font-weight: 500; color: #2a1040; font-size: 13px; }
+  .kpi-new-table td:not(:first-child) { text-align: center; }
+  .meta-val { color: #1255c0; font-weight: 700; font-size: 13px; }
+  .val-num { font-weight: 700; font-size: 14px; color: #1a1a18; }
+  .estado-ok   { color: #0a6640; font-weight: 700; font-size: 12px;
+    background: #d4f5e6; border-radius: 20px; padding: 3px 10px;
+    display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+  .estado-bajo { color: #6b3a00; font-weight: 700; font-size: 12px;
+    background: #fff0cc; border-radius: 20px; padding: 3px 10px;
+    display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+  .estado-sobre { color: #8b1a1a; font-weight: 700; font-size: 12px;
+    background: #ffe0cc; border-radius: 20px; padding: 3px 10px;
+    display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+  .estado-info { color: #444; font-weight: 600; font-size: 12px;
+    background: #ececec; border-radius: 20px; padding: 3px 10px;
+    display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
 
 
   /* Nota metodológica */
@@ -671,45 +686,45 @@ function estadoHtml(val, meta, lowerBetter, informativo) {
 
 function buildKpiTable(mes) {
   const k = KPI_DATA[mes];
-  const rows = [
-    ['Tasa de adherencia global',           k.adherencia+'%',     '95,0%',  false, false],
-    ['Tasa de pérdida de infusión',          k.tasa_perdida+'%',  '5,0%',   true,  false],
-    ['Carga promedio por enfermero',          k.carga_enf.toFixed(1), '3,0', true,  false],
-    ['% Pacientes con orden médica',          k.ord_med+'%',       '100,0%', false, false],
-  ];
-  const rows2 = [
-    ['Infusiones perdidas por Ev. Adverso',  k.ea_pct+'%',        '10,0%',  true,  false],
-    ['% Consentimientos informados',          k.consentimiento+'%','100,0%', false, false],
-    ['Pacientes sin infusión / total activos',k.sin_inf_pct+'%',  '10,0%',  true,  false],
-    ['Pacientes menores de edad',             k.menores,            '—',     true,  true ],
-  ];
-  function mkRows(arr) {
-    return arr.map(([kpi,val,meta,lower,info]) => {
-      const lowerBetter = lower;
-      const metaNum = parseFloat(meta.replace(',','.'));
-      const valNum = parseFloat(String(val).replace(',','.'));
-      const est = estadoHtml(valNum, metaNum, lowerBetter, info);
-      return `<tr>
-        <td>${kpi}</td>
-        <td style="text-align:center;font-weight:600">${val}</td>
-        <td style="text-align:center" class="meta-val">${meta}</td>
-        <td style="text-align:center">${est}</td>
-      </tr>`;
-    }).join('');
+  function estadoBadge(val, meta, lowerBetter, informativo) {
+    if (informativo) return '<span class="estado-info">&#9744; Informativo</span>';
+    const metaN = parseFloat(String(meta).replace(',','.'));
+    const valN  = parseFloat(String(val).replace(',','.'));
+    const ok = lowerBetter ? valN <= metaN : valN >= metaN;
+    if (ok) return '<span class="estado-ok">&#9989; OK</span>';
+    return lowerBetter
+      ? '<span class="estado-sobre">&#9888;&#65039; Sobre meta</span>'
+      : '<span class="estado-bajo">&#9888;&#65039; Bajo meta</span>';
   }
-  return `
-  <div class="kpi-table-wrap">
-    <div class="kpi-table-header">KPIs NUEVOS PROPUESTOS</div>
-    <div class="kpi-two-col">
-      <table class="kpi-new-table">
-        <thead><tr><th>KPI</th><th style="text-align:center">Valor ${mes}</th><th style="text-align:center">Meta sugerida</th><th style="text-align:center">Estado</th></tr></thead>
-        <tbody>${mkRows(rows)}</tbody>
-      </table>
+  function row(kpi, val, meta, lower, info) {
+    return `<tr>
+      <td>${kpi}</td>
+      <td><span class="val-num">${val}</span></td>
+      <td><span class="meta-val">${meta}</span></td>
+      <td>${estadoBadge(val,meta,lower,info)}</td>
+    </tr>`;
+  }
+  const left = [
+    row('Tasa de adherencia global',               k.adherencia+'%',             '95,0%',  false, false),
+    row('Tasa de p\u00e9rdida de infusi\u00f3n', k.tasa_perdida+'%',           '5,0%',   true,  false),
+    row('Carga promedio por enfermero',             k.carga_enf.toFixed(1),       '3,0',    true,  false),
+    row('% Pacientes con orden m\u00e9dica',       k.ord_med+'%',                '100,0%', false, false),
+  ].join('');
+  const right = [
+    row('Infusiones perdidas por Ev. Adverso',      k.ea_pct.toFixed(1)+'%',     '10,0%',  true,  false),
+    row('% Consentimientos informados',              k.consentimiento+'%',        '100,0%', false, false),
+    row('Pacientes sin infusi\u00f3n / total activos', k.sin_inf_pct.toFixed(1)+'%', '10,0%', true, false),
+    row('Pacientes menores de edad',                 k.menores,                   '\u2014', true,  true),
+  ].join('');
+  const thead = `<thead><tr>
+    <th>KPI</th><th>Valor ${mes}</th><th>Meta sugerida</th><th>Estado</th>
+  </tr></thead>`;
+  return `<div class="kpi-table-wrap">
+    <div class="kpi-table-header">KPIs Nuevos Propuestos</div>
+    <div class="kpi-body-grid">
+      <table class="kpi-new-table">${thead}<tbody>${left}</tbody></table>
       <div class="kpi-divider-col"></div>
-      <table class="kpi-new-table">
-        <thead><tr><th>KPI</th><th style="text-align:center">Valor ${mes}</th><th style="text-align:center">Meta sugerida</th><th style="text-align:center">Estado</th></tr></thead>
-        <tbody>${mkRows(rows2)}</tbody>
-      </table>
+      <table class="kpi-new-table">${thead}<tbody>${right}</tbody></table>
     </div>
   </div>`;
 }
