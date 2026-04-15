@@ -175,6 +175,30 @@
   .nota-metodologica .nota-footer { font-size: 11px; color: rgba(160,210,255,0.7);
     margin-top: 10px; border-top: 1px solid rgba(120,190,255,0.25); padding-top: 8px; }
 
+
+  /* Reagendamiento block */
+  .reag-block { background: rgba(8,35,90,0.82); border: 1px solid rgba(120,190,255,0.4);
+    border-radius: var(--radius-lg); padding: 18px 20px; margin-bottom: 16px;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .reag-block h3 { font-size: 14px; font-weight: 700; color: #90d8ff; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px; }
+  .reag-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 10px; margin-bottom: 14px; }
+  .reag-card { background: rgba(255,255,255,0.08); border: 1px solid rgba(120,190,255,0.25);
+    border-radius: var(--radius); padding: 12px 14px; text-align: center; }
+  .reag-card .rc-label { font-size: 11px; color: #a0c8f0; margin-bottom: 5px; font-weight: 500; }
+  .reag-card .rc-val   { font-size: 22px; font-weight: 700; color: #fff; line-height: 1; }
+  .reag-card .rc-pct   { font-size: 12px; color: #70c8ff; margin-top: 3px; font-weight: 600; }
+  .reag-card.green .rc-val { color: #5fffc0; }
+  .reag-card.amber .rc-val { color: #ffd060; }
+  .reag-card.blue  .rc-val { color: #70c8ff; }
+  .reag-bar-wrap { margin-top: 10px; }
+  .reag-bar-label { font-size: 11px; color: #a0c8f0; margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .reag-bar-track { height: 8px; background: rgba(255,255,255,0.12); border-radius: 4px; overflow: hidden; display: flex; }
+  .reag-bar-seg { height: 100%; }
+
+  /* Menores block inside kpi table */
+  .menores-pct { font-size: 11px; color: #555; display: block; margin-top: 2px; }
+
 </style>
 </head>
 <body>
@@ -298,6 +322,8 @@ function renderMes(el, mes) {
     <div class="metric-card"><div class="label">Px / enfermero</div><div class="value">${d.pxEnf.toFixed(2)}</div></div>
     <div class="metric-card ${d.nuevos > 0 ? 'green' : ''}"><div class="label">Nuevos ingresos</div><div class="value">${d.nuevos}</div></div>
     <div class="metric-card"><div class="label">Bajas</div><div class="value">${d.bajas}</div></div>
+    <div class="metric-card blue"><div class="label">Menores de edad</div><div class="value">${REAG_DATA[mes].menores}</div><div class="sub">${REAG_DATA[mes].pct_menores}% del total activo</div></div>
+    <div class="metric-card"><div class="label">Adultos</div><div class="value">${REAG_DATA[mes].adultos}</div><div class="sub">${REAG_DATA[mes].pct_adultos}% del total activo</div></div>
   </div>
 
   <div class="charts-row">
@@ -338,11 +364,13 @@ function renderMes(el, mes) {
     </table>
   </div>
 
+  <div id="reag-wrap-${mes}"></div>
   <div id="kpi-new-wrap-${mes}"></div>
   <div id="nota-wrap-${mes}"></div>
   `;
 
   // kpi nuevos propuestos table — inject before motivo legend
+  el.querySelector('#reag-wrap-'+mes).innerHTML = buildReagBlock(mes);
   el.querySelector('#kpi-new-wrap-'+mes).innerHTML = buildKpiTable(mes);
   el.querySelector('#nota-wrap-'+mes).innerHTML = buildNotaMetodologica(mes);
   // motivo legend
@@ -446,6 +474,8 @@ function renderComparativa(el) {
     <div class="metric-card green"><div class="label">Bajas Q1</div><div class="value">0</div></div>
     <div class="metric-card"><div class="label">Rango enfermeros</div><div class="value">33–38</div><div class="sub">Mín. Febrero</div></div>
     <div class="metric-card"><div class="label">Total Eventos Adversos</div><div class="value">10</div><div class="sub">Q1 acumulado</div></div>
+    <div class="metric-card blue"><div class="label">Menores de edad</div><div class="value">20</div><div class="sub">25,3% del total activo</div></div>
+    <div class="metric-card"><div class="label">Adultos</div><div class="value">59</div><div class="sub">74,7% del total activo</div></div>
   </div>
 
   <div class="section-title" style="margin-top:8px">Análisis de hallazgos clave</div>
@@ -663,15 +693,15 @@ render();
 const KPI_DATA = {
   Enero: {
     adherencia: 92.7, tasa_perdida: 7.8, carga_enf: 2.1, ord_med: 94.7,
-    ea_pct: 1.6, consentimiento: 100.0, sin_inf_pct: 19.0, menores: 20
+    ea_pct: 1.6, consentimiento: 100.0, sin_inf_pct: 19.0, menores: 20, pct_menores: 25.3
   },
   Febrero: {
     adherencia: 87.2, tasa_perdida: 13.3, carga_enf: 2.4, ord_med: 94.7,
-    ea_pct: 1.7, consentimiento: 100.0, sin_inf_pct: 30.4, menores: 20
+    ea_pct: 1.7, consentimiento: 100.0, sin_inf_pct: 30.4, menores: 20, pct_menores: 25.3
   },
   Marzo: {
     adherencia: 91.5, tasa_perdida: 8.5, carga_enf: 2.2, ord_med: 94.7,
-    ea_pct: 1.9, consentimiento: 100.0, sin_inf_pct: 22.8, menores: 20
+    ea_pct: 1.9, consentimiento: 100.0, sin_inf_pct: 22.8, menores: 20, pct_menores: 25.3
   }
 };
 
@@ -714,7 +744,7 @@ function buildKpiTable(mes) {
     row('Infusiones perdidas por Ev. Adverso',      k.ea_pct.toFixed(1)+'%',     '10,0%',  true,  false),
     row('% Consentimientos informados',              k.consentimiento+'%',        '100,0%', false, false),
     row('Pacientes sin infusi\u00f3n / total activos', k.sin_inf_pct.toFixed(1)+'%', '10,0%', true, false),
-    row('Pacientes menores de edad',                 k.menores,                   '\u2014', true,  true),
+    row('Pacientes menores de edad ('+k.pct_menores+'%)', k.menores+' / 79',      '\u2014', true,  true),
   ].join('');
   const thead = `<thead><tr>
     <th>KPI</th><th>Valor ${mes}</th><th>Meta sugerida</th><th>Estado</th>
@@ -756,6 +786,63 @@ function buildNotaMetodologica(mes) {
       <li><strong>Fuente:</strong> Registros internos Serproen — Sistema de seguimiento PSP Home Infusion Chile. Elaborado por EU Johanna Mermoud A., Supervisora PSP.</li>
     </ul>
     <div class="nota-footer">Período de corte: último día hábil del mes · Datos sujetos a validación clínica · Documento de uso interno</div>
+  </div>`;
+}
+
+
+
+const REAG_DATA = {
+  Enero:   { realizadas:177, en_fecha:91,  reagendadas:86,  anticipadas:34, postergadas:52, pct_ef:51.4, pct_reag:48.6, pct_ant:19.2, pct_post:29.4, dias_prom:0.8,  menores:20, adultos:59, total_pac:79, pct_menores:25.3, pct_adultos:74.7 },
+  Febrero: { realizadas:157, en_fecha:83,  reagendadas:74,  anticipadas:30, postergadas:44, pct_ef:52.9, pct_reag:47.1, pct_ant:19.1, pct_post:28.0, dias_prom:0.7,  menores:20, adultos:59, total_pac:79, pct_menores:25.3, pct_adultos:74.7 },
+  Marzo:   { realizadas:193, en_fecha:103, reagendadas:90,  anticipadas:41, postergadas:49, pct_ef:53.4, pct_reag:46.6, pct_ant:21.2, pct_post:25.4, dias_prom:0.2,  menores:20, adultos:59, total_pac:79, pct_menores:25.3, pct_adultos:74.7 },
+};
+
+function buildReagBlock(mes) {
+  const r = REAG_DATA[mes];
+  const barEF   = r.pct_ef.toFixed(1);
+  const barAnt  = r.pct_ant.toFixed(1);
+  const barPost = r.pct_post.toFixed(1);
+  return `
+  <div class="reag-block">
+    <h3>&#128197; Cumplimiento de fecha de infusi&oacute;n — Reagendamientos</h3>
+    <div class="reag-grid">
+      <div class="reag-card green">
+        <div class="rc-label">En fecha exacta</div>
+        <div class="rc-val">${r.en_fecha}</div>
+        <div class="rc-pct">${barEF}% de realizadas</div>
+      </div>
+      <div class="reag-card amber">
+        <div class="rc-label">Reagendadas (total)</div>
+        <div class="rc-val">${r.reagendadas}</div>
+        <div class="rc-pct">${r.pct_reag.toFixed(1)}% de realizadas</div>
+      </div>
+      <div class="reag-card blue">
+        <div class="rc-label">Anticipadas</div>
+        <div class="rc-val">${r.anticipadas}</div>
+        <div class="rc-pct">${barAnt}%</div>
+      </div>
+      <div class="reag-card">
+        <div class="rc-label">Postergadas</div>
+        <div class="rc-val">${r.postergadas}</div>
+        <div class="rc-pct">${barPost}%</div>
+      </div>
+      <div class="reag-card">
+        <div class="rc-label">Prom. d&iacute;as dif.</div>
+        <div class="rc-val">${r.dias_prom.toFixed(1)}</div>
+        <div class="rc-pct">d&iacute;as</div>
+      </div>
+    </div>
+    <div class="reag-bar-wrap">
+      <div class="reag-bar-label">
+        <span>&#9632; En fecha ${barEF}% &nbsp; &#9632; Anticipadas ${barAnt}% &nbsp; &#9632; Postergadas ${barPost}%</span>
+        <span>${r.realizadas} realizadas</span>
+      </div>
+      <div class="reag-bar-track">
+        <div class="reag-bar-seg" style="width:${barEF}%;background:#5fffc0;opacity:0.85"></div>
+        <div class="reag-bar-seg" style="width:${barAnt}%;background:#70c8ff;opacity:0.85"></div>
+        <div class="reag-bar-seg" style="width:${barPost}%;background:#ffd060;opacity:0.85"></div>
+      </div>
+    </div>
   </div>`;
 }
 
