@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PSP Home Infusion Chile KPI 2026 — Primer Trimestre</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -42,23 +43,23 @@
 
   /* Tabs */
   .tabs { display: flex; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
-  .tab { padding: 7px 20px; border-radius: var(--radius); border: 1px solid rgba(100,160,255,0.4); font-size: 13px; font-weight: 500; cursor: pointer; background: rgba(10,40,100,0.5); color: rgba(200,230,255,0.9); transition: all 0.15s; backdrop-filter: blur(4px); }
+  .tab { padding: 7px 20px; border-radius: var(--radius); border: 1px solid rgba(120,180,255,0.5); font-size: 13px; font-weight: 600; cursor: pointer; background: rgba(8,35,90,0.75); color: #c8e8ff; transition: all 0.15s; backdrop-filter: blur(6px); }
   .tab.active { background: var(--blue); color: #fff; border-color: var(--blue); }
   .tab:hover:not(.active) { background: rgba(30,80,160,0.6); }
 
   /* Section title */
-  .section-title { font-size: 11px; font-weight: 600; color: rgba(130,200,255,0.9); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .section-title { font-size: 11px; font-weight: 700; color: #90d8ff; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
 
   /* Metric cards */
   .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
-  .metric-card { background: rgba(10,40,100,0.55); border: 1px solid rgba(100,180,255,0.3); border-radius: var(--radius); padding: 14px 16px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
-  .metric-card .label { font-size: 12px; color: rgba(180,210,255,0.85); margin-bottom: 6px; line-height: 1.3; }
-  .metric-card .value { font-size: 24px; font-weight: 600; color: #ffffff; line-height: 1; }
-  .metric-card .sub { font-size: 11px; color: rgba(160,200,255,0.75); margin-top: 4px; }
-  .metric-card.green .value { color: var(--green-text); }
-  .metric-card.amber .value { color: var(--amber-text); }
-  .metric-card.red .value { color: var(--red-text); }
-  .metric-card.blue .value { color: var(--blue-text); }
+  .metric-card { background: rgba(8,35,90,0.78); border: 1px solid rgba(120,190,255,0.45); border-radius: var(--radius); padding: 14px 16px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .metric-card .label { font-size: 12px; color: #b8d8ff; margin-bottom: 6px; line-height: 1.3; font-weight: 500; }
+  .metric-card .value { font-size: 24px; font-weight: 700; color: #ffffff; line-height: 1; text-shadow: 0 1px 4px rgba(0,0,0,0.4); }
+  .metric-card .sub { font-size: 11px; color: #a8d0ff; margin-top: 4px; font-weight: 400; }
+  .metric-card.green .value { color: #5fffc0; text-shadow: 0 1px 6px rgba(0,180,100,0.5); }
+  .metric-card.amber .value { color: #ffd060; text-shadow: 0 1px 6px rgba(200,130,0,0.5); }
+  .metric-card.red .value { color: #ff7070; text-shadow: 0 1px 6px rgba(200,0,0,0.5); }
+  .metric-card.blue .value { color: #70c8ff; text-shadow: 0 1px 6px rgba(0,100,220,0.5); }
 
   /* Chart cards */
   .charts-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; margin-bottom: 16px; }
@@ -118,6 +119,47 @@
     .charts-row, .charts-row3 { grid-template-columns: 1fr; }
     .chart-full { grid-column: 1; }
   }
+
+  /* KPI nuevos propuestos */
+  .kpi-table-wrap { background: rgba(255,255,255,0.93); border: 1px solid rgba(255,255,255,0.5);
+    border-radius: var(--radius-lg); padding: 0; overflow: hidden;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); margin-bottom: 16px; }
+  .kpi-table-header { background: #7B2D8B; color: #fff; text-align: center;
+    font-size: 13px; font-weight: 700; padding: 10px 16px; letter-spacing: 0.05em; }
+  .kpi-new-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .kpi-new-table thead tr { background: #e8e0ef; }
+  .kpi-new-table thead th { padding: 8px 10px; font-weight: 700; color: #3a1a50;
+    text-align: left; border-bottom: 1px solid #c9b8d8; font-size: 12px; }
+  .kpi-new-table tbody tr:nth-child(even) { background: rgba(240,234,248,0.7); }
+  .kpi-new-table tbody tr:nth-child(odd) { background: rgba(255,255,255,0.6); }
+  .kpi-new-table tbody tr:hover td { background: rgba(180,150,220,0.15); }
+  .kpi-new-table td { padding: 7px 10px; color: #1a1a18; border-bottom: 1px solid rgba(180,150,220,0.25); vertical-align: middle; }
+  .kpi-new-table td:first-child { font-weight: 500; color: #2a1a3a; }
+  .meta-val { color: #1a6fd4; font-weight: 600; }
+  .estado-ok { color: #0a6640; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+  .estado-bajo { color: #7a4f00; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+  .estado-sobre { color: #8b1a1a; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+  .estado-info { color: #444; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; }
+  .kpi-two-col { display: grid; grid-template-columns: 1fr 1fr; }
+  .kpi-two-col .kpi-new-table td:nth-child(1) { min-width: 180px; }
+  .kpi-divider-col { width: 1px; background: #c9b8d8; }
+
+
+  /* Nota metodológica */
+  .nota-metodologica { background: rgba(8,35,90,0.82); border: 1px solid rgba(120,190,255,0.4);
+    border-left: 4px solid #70c8ff; border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    padding: 16px 20px; margin-bottom: 24px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .nota-metodologica h4 { font-size: 12px; font-weight: 700; color: #90d8ff;
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .nota-metodologica ul { list-style: none; padding: 0; margin: 0; display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 5px 20px; }
+  .nota-metodologica li { font-size: 12px; color: #c0dcff; line-height: 1.5;
+    padding-left: 14px; position: relative; }
+  .nota-metodologica li::before { content: "·"; position: absolute; left: 0;
+    color: #70c8ff; font-weight: 900; font-size: 16px; top: -1px; }
+  .nota-metodologica .nota-footer { font-size: 11px; color: rgba(160,210,255,0.7);
+    margin-top: 10px; border-top: 1px solid rgba(120,190,255,0.25); padding-top: 8px; }
+
 </style>
 </head>
 <body>
@@ -197,6 +239,8 @@ function setMonth(m, btn) {
   destroyCharts();
   render();
 }
+
+Chart.register(ChartDataLabels);
 
 function mkChart(id, config) {
   const c = new Chart(document.getElementById(id), config);
@@ -278,8 +322,14 @@ function renderMes(el, mes) {
       <tbody id="tbl-${mes}"></tbody>
     </table>
   </div>
+
+  <div id="kpi-new-wrap-${mes}"></div>
+  <div id="nota-wrap-${mes}"></div>
   `;
 
+  // kpi nuevos propuestos table — inject before motivo legend
+  el.querySelector('#kpi-new-wrap-'+mes).innerHTML = buildKpiTable(mes);
+  el.querySelector('#nota-wrap-'+mes).innerHTML = buildNotaMetodologica(mes);
   // motivo legend
   document.getElementById('leg-mot-'+mes).innerHTML = legendHtml(MOTIVOS.map((k,i)=>[`${k} (${d.motivos[k]})`,MOTIVO_COLORS[i]]));
 
@@ -290,7 +340,7 @@ function renderMes(el, mes) {
       { label:'Realizadas', data: realizadas, backgroundColor:'#378ADD', stack:'s' },
       { label:'Perdidas', data: perdidas_arr, backgroundColor:'#E24B4A', stack:'s' }
     ]},
-    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, datalabels:{display:false}},
       scales:{ x:{stacked:true,grid:{display:false}}, y:{stacked:true,grid:{color:'rgba(0,0,0,0.06)'}} } }
   });
 
@@ -298,21 +348,51 @@ function renderMes(el, mes) {
   mkChart('c2-'+mes, {
     type:'doughnut',
     data:{ labels:MOTIVOS, datasets:[{ data:MOTIVOS.map(k=>d.motivos[k]), backgroundColor:MOTIVO_COLORS }] },
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, cutout:'65%' }
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'65%',
+      plugins:{ legend:{display:false},
+        datalabels:{ color:'#fff', font:{ weight:'bold', size:12 },
+          formatter:(val,ctx) => {
+            const total = ctx.chart.data.datasets[0].data.reduce((a,b)=>a+b,0);
+            const pct = ((val/total)*100);
+            return pct >= 8 ? pct.toFixed(1)+'%' : '';
+          }
+        }
+      }
+    }
   });
 
   // c3 - donut zonas
   mkChart('c3-'+mes, {
     type:'doughnut',
     data:{ labels:Object.keys(d.porZona), datasets:[{ data:Object.values(d.porZona), backgroundColor:Object.values(ZONE_COLORS) }] },
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, cutout:'65%' }
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'65%',
+      plugins:{ legend:{display:false},
+        datalabels:{ color:'#fff', font:{ weight:'bold', size:12 },
+          formatter:(val,ctx) => {
+            const total = ctx.chart.data.datasets[0].data.reduce((a,b)=>a+b,0);
+            const pct = ((val/total)*100);
+            return pct >= 8 ? pct.toFixed(1)+'%' : '';
+          }
+        }
+      }
+    }
   });
 
   // c4 - donut medicamentos
   mkChart('c4-'+mes, {
     type:'doughnut',
     data:{ labels:pats.map(p=>MED_MAP[p]), datasets:[{ data:pats.map(p=>d.medicamento[MED_MAP[p]]), backgroundColor:pats.map(p=>COLORS[p]) }] },
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, cutout:'65%' }
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'65%',
+      plugins:{ legend:{display:false},
+        datalabels:{ color:'#fff', font:{ weight:'bold', size:12 },
+          formatter:(val,ctx) => {
+            const total = ctx.chart.data.datasets[0].data.reduce((a,b)=>a+b,0);
+            const pct = ((val/total)*100);
+            return pct >= 8 ? pct.toFixed(1)+'%' : '';
+          }
+        }
+      }
+    }
   });
 
   // Tabla
@@ -454,7 +534,7 @@ function renderComparativa(el) {
       borderColor:'#378ADD', backgroundColor:'rgba(55,138,221,0.12)', fill:true, tension:0.35,
       pointRadius:6, pointBackgroundColor:'#378ADD', pointBorderColor:'#fff', pointBorderWidth:2
     }]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, datalabels:{display:false}},
       scales:{ x:{grid:{display:false}}, y:{min:82,max:97,ticks:{callback:v=>v+'%'},grid:{color:'rgba(0,0,0,0.06)'}} } }
   });
 
@@ -464,7 +544,7 @@ function renderComparativa(el) {
     data:{ labels:MESES, datasets: MOTIVOS.map((k,i)=>({
       label:k, data:MESES.map(m=>DATA[m].motivos[k]), backgroundColor:MOTIVO_COLORS[i], stack:'s'
     }))},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, datalabels:{display:false}},
       scales:{ x:{stacked:true,grid:{display:false}}, y:{stacked:true,grid:{color:'rgba(0,0,0,0.06)'}} } }
   });
 
@@ -475,7 +555,7 @@ function renderComparativa(el) {
       label:'Infusiones', data:MESES.map(m=>DATA[m].infusiones),
       backgroundColor:['#378ADD','#E24B4A','#1D9E75']
     }]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, datalabels:{display:false}},
       scales:{ x:{grid:{display:false}}, y:{grid:{color:'rgba(0,0,0,0.06)'},min:140} } }
   });
 
@@ -488,7 +568,7 @@ function renderComparativa(el) {
         backgroundColor:'rgba(212,83,126,0.1)', yAxisID:'y2', tension:0.3,
         pointRadius:5, pointBackgroundColor:'#D4537E', pointBorderColor:'#fff', pointBorderWidth:2 }
     ]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, datalabels:{display:false}},
       scales:{
         y1:{ type:'linear', position:'left', grid:{color:'rgba(0,0,0,0.06)'}, min:28, max:42 },
         y2:{ type:'linear', position:'right', grid:{display:false}, min:1.8, max:2.6 }
@@ -503,7 +583,7 @@ function renderComparativa(el) {
       data:MESES.map(m=>DATA[m].motivos['Evento Adverso']),
       backgroundColor:'#E24B4A'
     }]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, datalabels:{display:false}},
       scales:{ x:{grid:{display:false}}, y:{grid:{color:'rgba(0,0,0,0.06)'},min:0,ticks:{stepSize:1}} } }
   });
 
@@ -563,6 +643,105 @@ function renderComparativa(el) {
 }
 
 render();
+
+
+const KPI_DATA = {
+  Enero: {
+    adherencia: 92.7, tasa_perdida: 7.8, carga_enf: 2.1, ord_med: 94.7,
+    ea_pct: 1.6, consentimiento: 100.0, sin_inf_pct: 19.0, menores: 20
+  },
+  Febrero: {
+    adherencia: 87.2, tasa_perdida: 13.3, carga_enf: 2.4, ord_med: 94.7,
+    ea_pct: 1.7, consentimiento: 100.0, sin_inf_pct: 30.4, menores: 20
+  },
+  Marzo: {
+    adherencia: 91.5, tasa_perdida: 8.5, carga_enf: 2.2, ord_med: 94.7,
+    ea_pct: 1.9, consentimiento: 100.0, sin_inf_pct: 22.8, menores: 20
+  }
+};
+
+function estadoHtml(val, meta, lowerBetter, informativo) {
+  if (informativo) return '<span class="estado-info">&#9744; Informativo</span>';
+  const ok = lowerBetter ? val <= meta : val >= meta;
+  const sobre = lowerBetter ? val > meta : val < meta;
+  if (ok) return '<span class="estado-ok">&#9989; OK</span>';
+  if (lowerBetter) return '<span class="estado-sobre">&#9888;&#65039; Sobre meta</span>';
+  return '<span class="estado-bajo">&#9888;&#65039; Bajo meta</span>';
+}
+
+function buildKpiTable(mes) {
+  const k = KPI_DATA[mes];
+  const rows = [
+    ['Tasa de adherencia global',           k.adherencia+'%',     '95,0%',  false, false],
+    ['Tasa de pérdida de infusión',          k.tasa_perdida+'%',  '5,0%',   true,  false],
+    ['Carga promedio por enfermero',          k.carga_enf.toFixed(1), '3,0', true,  false],
+    ['% Pacientes con orden médica',          k.ord_med+'%',       '100,0%', false, false],
+  ];
+  const rows2 = [
+    ['Infusiones perdidas por Ev. Adverso',  k.ea_pct+'%',        '10,0%',  true,  false],
+    ['% Consentimientos informados',          k.consentimiento+'%','100,0%', false, false],
+    ['Pacientes sin infusión / total activos',k.sin_inf_pct+'%',  '10,0%',  true,  false],
+    ['Pacientes menores de edad',             k.menores,            '—',     true,  true ],
+  ];
+  function mkRows(arr) {
+    return arr.map(([kpi,val,meta,lower,info]) => {
+      const lowerBetter = lower;
+      const metaNum = parseFloat(meta.replace(',','.'));
+      const valNum = parseFloat(String(val).replace(',','.'));
+      const est = estadoHtml(valNum, metaNum, lowerBetter, info);
+      return `<tr>
+        <td>${kpi}</td>
+        <td style="text-align:center;font-weight:600">${val}</td>
+        <td style="text-align:center" class="meta-val">${meta}</td>
+        <td style="text-align:center">${est}</td>
+      </tr>`;
+    }).join('');
+  }
+  return `
+  <div class="kpi-table-wrap">
+    <div class="kpi-table-header">KPIs NUEVOS PROPUESTOS</div>
+    <div class="kpi-two-col">
+      <table class="kpi-new-table">
+        <thead><tr><th>KPI</th><th style="text-align:center">Valor ${mes}</th><th style="text-align:center">Meta sugerida</th><th style="text-align:center">Estado</th></tr></thead>
+        <tbody>${mkRows(rows)}</tbody>
+      </table>
+      <div class="kpi-divider-col"></div>
+      <table class="kpi-new-table">
+        <thead><tr><th>KPI</th><th style="text-align:center">Valor ${mes}</th><th style="text-align:center">Meta sugerida</th><th style="text-align:center">Estado</th></tr></thead>
+        <tbody>${mkRows(rows2)}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+
+
+function buildNotaMetodologica(mes) {
+  const data = {
+    Enero:   { total_prog: 192, realizadas: 177, perdidas: 15, pct_adh: '92,7', ea: 3, ord_med: '94,7', menores: 20 },
+    Febrero: { total_prog: 180, realizadas: 157, perdidas: 24, pct_adh: '87,2', ea: 3, ord_med: '94,7', menores: 20 },
+    Marzo:   { total_prog: 211, realizadas: 193, perdidas: 18, pct_adh: '91,5', ea: 4, ord_med: '94,7', menores: 20 },
+  };
+  const d = data[mes];
+  return `
+  <div class="nota-metodologica">
+    <h4>&#128203; Nota metodológica — ${mes} 2026</h4>
+    <ul>
+      <li><strong>Universo:</strong> 79 pacientes activos con enfermedades de depósito lisosomal (Fabry, Gaucher, MPS1, Pompe). Sin altas ni bajas en el período.</li>
+      <li><strong>Infusiones programadas:</strong> ${d.total_prog} sesiones agendadas según protocolo de cada patología.</li>
+      <li><strong>Infusiones realizadas:</strong> ${d.realizadas} sesiones completadas (${d.pct_adh}% del total programado).</li>
+      <li><strong>Infusiones perdidas:</strong> ${d.perdidas} sesiones no realizadas por evento adverso, vacaciones, control médico u otro motivo.</li>
+      <li><strong>Adherencia estimada:</strong> calculada como realizadas / programadas × 100. No incluye infusiones realizadas fuera del domicilio asignado.</li>
+      <li><strong>Eventos Adversos:</strong> ${d.ea} caso(s) registrado(s) que motivaron suspensión de infusión. Se notifican según protocolo Serproen/Sanofi.</li>
+      <li><strong>Órdenes médicas vigentes:</strong> ${d.ord_med}% del universo activo cuenta con orden médica al cierre del mes.</li>
+      <li><strong>Consentimientos informados:</strong> 100% de los pacientes activos con consentimiento firmado y vigente.</li>
+      <li><strong>Pacientes menores de edad:</strong> ${d.menores} pacientes con tutor legal responsable. CI firmado por tutor en todos los casos.</li>
+      <li><strong>Zona geográfica:</strong> Norte (35 px), Centro (19 px), Sur (25 px). Distribución estable durante Q1 2026.</li>
+      <li><strong>Carga enfermero:</strong> promedio de pacientes asignados por EU, calculado sobre el total de enfermeros activos en el mes.</li>
+      <li><strong>Fuente:</strong> Registros internos Serproen — Sistema de seguimiento PSP Home Infusion Chile. Elaborado por EU Johanna Mermoud A., Supervisora PSP.</li>
+    </ul>
+    <div class="nota-footer">Período de corte: último día hábil del mes · Datos sujetos a validación clínica · Documento de uso interno</div>
+  </div>`;
+}
+
 </script>
-</body>
-</html>
